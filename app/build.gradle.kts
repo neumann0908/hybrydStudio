@@ -6,6 +6,7 @@ plugins {
 android {
     namespace = "com.hybridstudio.app"
     compileSdk = 34
+    ndkVersion = "25.1.8937393"
 
     defaultConfig {
         applicationId = "com.hybridstudio.app"
