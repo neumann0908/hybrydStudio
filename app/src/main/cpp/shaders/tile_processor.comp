@@ -1,0 +1,33 @@
+#version 450
+
+layout(local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
+
+layout(std430, binding = 0) buffer TileData {
+    uint pixels[];
+};
+
+layout(push_constant) uniform PushConstants {
+    uint width;
+    uint height;
+    uint opType;
+} params;
+
+void main() {
+    uint x = gl_GlobalInvocationID.x;
+    uint y = gl_GlobalInvocationID.y;
+
+    if (x >= params.width || y >= params.height) {
+        return;
+    }
+
+    uint index = y * params.width + x;
+    uint color = pixels[index];
+
+    if (params.opType == 1u) {
+        uint a = (color >> 24) & 0xFFu;
+        uint r = 255u - ((color >> 16) & 0xFFu);
+        uint g = 255u - ((color >> 8) & 0xFFu);
+        uint b = 255u - (color & 0xFFu);
+        pixels[index] = (a << 24) | (r << 16) | (g << 8) | b;
+    }
+}
